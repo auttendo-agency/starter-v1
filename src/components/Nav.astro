@@ -1,0 +1,90 @@
+---
+interface Props {
+  transparent?: boolean;
+}
+const { transparent = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+// Customize per project.
+const links: { href: string; label: string }[] = [
+  // { href: '/about', label: 'About' },
+  // { href: '/services', label: 'Services' },
+  // { href: '/contact', label: 'Contact' },
+];
+
+const brand = 'Brand';
+---
+<header
+  id="site-nav"
+  data-transparent={transparent ? 'true' : 'false'}
+  class:list={[
+    'fixed top-0 left-0 right-0 z-50 transition-colors duration-300',
+    transparent ? 'text-white' : 'text-ink bg-paper border-b border-line',
+  ]}
+>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 shrink-0">
+      <span class="font-display text-xl tracking-tight">{brand}</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-8">
+      {links.map((l) => {
+        const active = path === l.href;
+        return (
+          <a
+            href={l.href}
+            class:list={[
+              'text-sm font-medium transition-opacity',
+              active ? 'opacity-100' : 'opacity-75 hover:opacity-100',
+            ]}
+          >
+            {l.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <button
+      id="nav-toggle"
+      class="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+      aria-label="Menu"
+    >
+      <span class="block w-5 h-px bg-current"></span>
+      <span class="block w-5 h-px bg-current"></span>
+      <span class="block w-5 h-px bg-current"></span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden lg:hidden bg-paper text-ink border-t border-line">
+    <div class="px-6 py-6 flex flex-col gap-4">
+      {links.map((l) => (
+        <a href={l.href} class="text-base font-medium py-2 border-b border-line/50">{l.label}</a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-nav') as HTMLElement | null;
+  const mobileMenu = document.getElementById('mobile-menu');
+  const toggle = document.getElementById('nav-toggle');
+
+  function setNavStyle() {
+    if (!header) return;
+    const isTransparent = header.dataset.transparent === 'true';
+    const scrolled = window.scrollY > 30;
+    if (isTransparent && !scrolled) {
+      header.classList.remove('bg-paper', 'text-ink', 'border-b', 'border-line');
+      header.classList.add('text-white');
+    } else {
+      header.classList.add('bg-paper', 'text-ink', 'border-b', 'border-line');
+      header.classList.remove('text-white');
+    }
+  }
+  setNavStyle();
+  window.addEventListener('scroll', setNavStyle, { passive: true });
+
+  toggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+</script>
