@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
+import svelte from '@astrojs/svelte';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
 // https://astro.build/config
@@ -19,6 +20,7 @@ export default defineConfig({
   //   locales: ['en', 'nl'],
   //   routing: { prefixDefaultLocale: false },
   // },
+  integrations: [svelte()],
   vite: {
     plugins: [
       tailwindcss(),
