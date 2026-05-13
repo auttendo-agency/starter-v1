@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { m } from '../paraglide/messages.js';
+import { getLocale, getTextDirection } from '../paraglide/runtime.js';
 
 interface Props {
   title?: string;
@@ -10,13 +12,16 @@ interface Props {
 }
 
 const {
-  title = 'Site title',
-  description = 'Site description.',
+  title = m.site_title(),
+  description = m.site_description(),
   transparentNav = false,
 } = Astro.props;
+
+const lang = getLocale();
+const dir = getTextDirection();
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

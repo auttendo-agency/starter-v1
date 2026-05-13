@@ -1,0 +1,25 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "site_title": "Site title",
+  "site_description": "Site description.",
+
+  "nav_brand": "Brand",
+  "nav_toggle_label": "Menu",
+
+  "footer_brand": "Brand",
+  "footer_tagline": "Short tagline or description goes here. Replace per project.",
+  "footer_contact_heading": "Contact",
+  "footer_address_line1": "Street 1",
+  "footer_address_line2": "0000 AA City",
+  "footer_phone_label": "+00 00 000 0000",
+  "footer_phone_href": "tel:+0000000000",
+  "footer_links_heading": "Links",
+  "footer_email_label": "hello@example.com",
+  "footer_email_href": "mailto:hello@example.com",
+  "footer_copyright": "© {year} {brand}.",
+
+  "home_hero_eyebrow": "Eyebrow",
+  "home_hero_headline": "Headline goes here.",
+  "home_hero_body": "Supporting paragraph. Replace this hero per project.",
+  "home_section_placeholder": "Replace this content with the rebuilt site's homepage sections."
+}

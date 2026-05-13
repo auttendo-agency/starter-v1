@@ -1,28 +1,29 @@
 ---
+import { m } from '../paraglide/messages.js';
+
 const year = new Date().getFullYear();
-const brand = 'Brand';
 ---
 <footer class="bg-ink text-white">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-10 py-20">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
       <div class="lg:col-span-5">
-        <div class="font-display text-2xl mb-6">{brand}</div>
+        <div class="font-display text-2xl mb-6">{m.footer_brand()}</div>
         <p class="text-white/60 text-sm leading-relaxed max-w-md">
-          Short tagline or description goes here. Replace per project.
+          {m.footer_tagline()}
         </p>
       </div>
 
       <div class="lg:col-span-3">
-        <div class="eyebrow !text-white/50 mb-4">Contact</div>
+        <div class="eyebrow !text-white/50 mb-4">{m.footer_contact_heading()}</div>
         <address class="not-italic text-sm leading-relaxed text-white/80">
-          Street 1<br />
-          0000 AA City<br />
-          <a href="tel:+0000000000" class="text-white hover:text-brand-light transition-colors">+00 00 000 0000</a>
+          {m.footer_address_line1()}<br />
+          {m.footer_address_line2()}<br />
+          <a href={m.footer_phone_href()} class="text-white hover:text-brand-light transition-colors">{m.footer_phone_label()}</a>
         </address>
       </div>
 
       <div class="lg:col-span-4">
-        <div class="eyebrow !text-white/50 mb-4">Links</div>
+        <div class="eyebrow !text-white/50 mb-4">{m.footer_links_heading()}</div>
         <ul class="space-y-2 text-sm">
           {/* Customize per project */}
         </ul>
@@ -31,9 +32,9 @@ const brand = 'Brand';
 
     <div class="section-line bg-white/10 mt-16 mb-6"></div>
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-white/50">
-      <p>© {year} {brand}.</p>
+      <p>{m.footer_copyright({ year: String(year), brand: m.footer_brand() })}</p>
       <div class="flex gap-5">
-        <a href="mailto:hello@example.com" class="hover:text-white">hello@example.com</a>
+        <a href={m.footer_email_href()} class="hover:text-white">{m.footer_email_label()}</a>
       </div>
     </div>
   </div>

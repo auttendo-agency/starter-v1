@@ -1,18 +1,19 @@
 ---
+import { m } from '../paraglide/messages.js';
+
 interface Props {
   transparent?: boolean;
 }
 const { transparent = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
-// Customize per project.
+// Customize per project. Labels go through paraglide messages so they
+// translate cleanly when locales are added later — e.g. `m.nav_about()`.
 const links: { href: string; label: string }[] = [
-  // { href: '/about', label: 'About' },
-  // { href: '/services', label: 'Services' },
-  // { href: '/contact', label: 'Contact' },
+  // { href: '/about', label: m.nav_about() },
+  // { href: '/services', label: m.nav_services() },
+  // { href: '/contact', label: m.nav_contact() },
 ];
-
-const brand = 'Brand';
 ---
 <header
   id="site-nav"
@@ -24,7 +25,7 @@ const brand = 'Brand';
 >
   <div class="max-w-[1400px] mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3 shrink-0">
-      <span class="font-display text-xl tracking-tight">{brand}</span>
+      <span class="font-display text-xl tracking-tight">{m.nav_brand()}</span>
     </a>
 
     <nav class="hidden lg:flex items-center gap-8">
@@ -47,7 +48,7 @@ const brand = 'Brand';
     <button
       id="nav-toggle"
       class="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
-      aria-label="Menu"
+      aria-label={m.nav_toggle_label()}
     >
       <span class="block w-5 h-px bg-current"></span>
       <span class="block w-5 h-px bg-current"></span>
