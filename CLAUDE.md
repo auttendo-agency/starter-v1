@@ -115,8 +115,19 @@ Reference: https://bits-ui.com/docs
 - `project.inlang/settings.json` — Paraglide project config (`baseLocale`, `locales`, plugin)
 - `messages/<locale>.json` — one file per locale, keys must be valid JS identifiers (e.g. `home_hero_headline`, not `home.hero.headline`)
 - `astro.config.mjs` — `paraglideVitePlugin({ project, outdir, strategy: ['baseLocale'] })`
-- `src/paraglide/` — generated on every build/dev. **Gitignored. Never edit by hand.**
+- `src/paraglide/` — Paraglide compiler output. **Committed to git on purpose** (see "Why src/paraglide/ is committed" below). Never hand-edit; let the vite plugin regenerate it when messages or settings change, then commit the diff.
 - `src/layouts/Base.astro` reads `getLocale()` / `getTextDirection()` and sets `<html lang dir>`
+
+### Why src/paraglide/ is committed
+
+Paraglide's compiler fetches its message-format plugin from `cdn.jsdelivr.net` at build time. Agent sandboxes (TaskRunner / `/site-rebuild`) run with a restricted egress allowlist that doesn't include third-party CDNs, so `astro build` would fail there if `src/paraglide/` were absent.
+
+We commit the compiled output instead. Treat it like any other build artifact that has to live in the repo:
+
+- **Never edit a file under `src/paraglide/` by hand.** It is generated. Edit `messages/<locale>.json` and let the Vite plugin recompile.
+- **Never delete `src/paraglide/`** as a "cleanup" or "regenerate" step from inside the sandbox — you can't regenerate it there.
+- **Do commit changes** to `src/paraglide/` that the plugin produces locally when you change messages or settings. A diff under `src/paraglide/` paired with a `messages/` diff is expected; a `src/paraglide/` diff with no matching message change is a red flag.
+- Linters/typecheckers already get a free pass via the `/* eslint-disable */` header the plugin emits.
 
 ### Rule: `baseLocale` matches the source site's language
 
