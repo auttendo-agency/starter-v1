@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Footer_TaglineInputs */
 
-const en_footer_tagline = /** @type {(inputs: Footer_TaglineInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Short tagline or description goes here. Replace per project.`)
+const nl_footer_tagline = /** @type {(inputs: Footer_TaglineInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Korte tagline of omschrijving. Vervang per project.`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Short tagline or description goes here. Replace per project." |
-*
+
 * @param {Footer_TaglineInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const footer_tagline = /** @type {((inputs?: Footer_TaglineInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_TaglineInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const footer_tagline = /** @type {((inputs?: Footer_TaglineInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_TaglineInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_footer_tagline(inputs)
+	return nl_footer_tagline(inputs)
 });

@@ -3,22 +3,29 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { m } from '../paraglide/messages.js';
-import { getLocale, getTextDirection } from '../paraglide/runtime.js';
+import { getLocale, getTextDirection, baseLocale } from '../paraglide/runtime.js';
 
 interface Props {
   title?: string;
   description?: string;
   transparentNav?: boolean;
+  redirectLocale?: boolean;
 }
 
 const {
   title = m.site_title(),
   description = m.site_description(),
   transparentNav = false,
+  redirectLocale = false,
 } = Astro.props;
 
 const lang = getLocale();
 const dir = getTextDirection();
+// First-visit locale redirect. Inert on single-locale builds (nothing passes
+// redirectLocale). On a multilingual site, set redirectLocale on the base-locale
+// homepage so non-base-language visitors are bounced to /en/ once. Pure SSG, no
+// adapter needed (the redirect runs client-side, not in middleware).
+const enableLocaleRedirect = redirectLocale && lang === baseLocale;
 ---
 <!doctype html>
 <html lang={lang} dir={dir}>
@@ -34,6 +41,25 @@ const dir = getTextDirection();
       rel="stylesheet"
     />
     <title>{title}</title>
+    {enableLocaleRedirect && (
+      <script is:inline>
+        (function () {
+          try {
+            if (window.location.pathname !== '/') return;
+            var KEY = 'locale-redirect';
+            if (localStorage.getItem(KEY)) return;
+            localStorage.setItem(KEY, '1');
+            var lang = (navigator.language || '').toLowerCase();
+            // Visitor's browser matches the base locale: keep them at the root.
+            if (lang.indexOf('nl') === 0) return;
+            // Anything else: send to the English variant.
+            window.location.replace('/en/');
+          } catch (e) {
+            /* no-op */
+          }
+        })();
+      </script>
+    )}
   </head>
   <body>
     <Nav transparent={transparentNav} />

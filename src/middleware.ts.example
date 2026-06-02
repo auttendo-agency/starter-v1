@@ -1,0 +1,17 @@
+// Rename to `src/middleware.ts` when going multilingual (see README → "Going multilingual").
+//
+// Paraglide resolves the active locale from the URL per request. In an SSG build
+// the route is already chosen by getStaticPaths under src/pages/[...locale]/, so
+// the callback is just `() => next()`.
+//
+// Do NOT use `({ request }) => next(request)` here (the form Paraglide's
+// server-mode docs show). With a [...locale] catch-all + static output it
+// de-localizes `/en/` down to `/` before Astro routes it, so the prefixed-locale
+// page collapses onto the base route and the build emits a 404 at
+// dist/en/index.html instead of the real /en/ homepage.
+import { defineMiddleware } from 'astro:middleware';
+import { paraglideMiddleware } from './paraglide/server.js';
+
+export const onRequest = defineMiddleware((context, next) =>
+  paraglideMiddleware(context.request, () => next()),
+);

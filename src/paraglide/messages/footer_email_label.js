@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Footer_Email_LabelInputs */
 
-const en_footer_email_label = /** @type {(inputs: Footer_Email_LabelInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`hello@example.com`)
+const nl_footer_email_label = /** @type {(inputs: Footer_Email_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`hallo@voorbeeld.nl`)
 };
 
 /**
-* | output |
-* | --- |
-* | "hello@example.com" |
-*
+
 * @param {Footer_Email_LabelInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const footer_email_label = /** @type {((inputs?: Footer_Email_LabelInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Email_LabelInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const footer_email_label = /** @type {((inputs?: Footer_Email_LabelInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Email_LabelInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_footer_email_label(inputs)
+	return nl_footer_email_label(inputs)
 });

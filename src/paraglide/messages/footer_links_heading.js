@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Footer_Links_HeadingInputs */
 
-const en_footer_links_heading = /** @type {(inputs: Footer_Links_HeadingInputs) => LocalizedString} */ () => {
+const nl_footer_links_heading = /** @type {(inputs: Footer_Links_HeadingInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Links`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Links" |
-*
+
 * @param {Footer_Links_HeadingInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const footer_links_heading = /** @type {((inputs?: Footer_Links_HeadingInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Links_HeadingInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const footer_links_heading = /** @type {((inputs?: Footer_Links_HeadingInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Links_HeadingInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_footer_links_heading(inputs)
+	return nl_footer_links_heading(inputs)
 });

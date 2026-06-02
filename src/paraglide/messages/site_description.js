@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Site_DescriptionInputs */
 
-const en_site_description = /** @type {(inputs: Site_DescriptionInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Site description.`)
+const nl_site_description = /** @type {(inputs: Site_DescriptionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Sitebeschrijving.`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Site description." |
-*
+
 * @param {Site_DescriptionInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const site_description = /** @type {((inputs?: Site_DescriptionInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Site_DescriptionInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const site_description = /** @type {((inputs?: Site_DescriptionInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Site_DescriptionInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_site_description(inputs)
+	return nl_site_description(inputs)
 });

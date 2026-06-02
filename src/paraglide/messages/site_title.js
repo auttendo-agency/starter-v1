@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Site_TitleInputs */
 
-const en_site_title = /** @type {(inputs: Site_TitleInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Site title`)
+const nl_site_title = /** @type {(inputs: Site_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Sitetitel`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Site title" |
-*
+
 * @param {Site_TitleInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const site_title = /** @type {((inputs?: Site_TitleInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Site_TitleInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const site_title = /** @type {((inputs?: Site_TitleInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Site_TitleInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_site_title(inputs)
+	return nl_site_title(inputs)
 });

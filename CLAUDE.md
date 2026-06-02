@@ -4,12 +4,12 @@ Project rules for any agent working in this repo. Adhere to these — they overr
 
 ## What this is
 
-Opinionated Astro 6 + Tailwind 4 starter, used as the base template for the `/site-rebuild` skill. Distilled from real rebuilds. Everything common is here; everything project-specific is intentionally absent.
+Opinionated Astro 6 + Tailwind 4 starter. Everything common to a new build is here; everything project-specific is intentionally absent.
 
 ## What's wired up
 
 - **Astro 6 + Tailwind 4** via `@tailwindcss/vite` (no separate `astro add tailwind` step)
-- **Paraglide JS** for i18n — single-locale by default (`en`), multilingual with a config flip
+- **Paraglide JS** for i18n — single-locale Dutch (`nl`) by default, multilingual with a config flip
 - **Svelte 5 + bits-ui** pre-installed for accessibility-sensitive primitives (dropdown, dialog, select, combobox, tabs, popover, etc.). bits-ui is the unstyled / headless primitive layer — same Radix-equivalent a11y, none of the shadcn visual baggage. Import directly: `import { DropdownMenu } from "bits-ui"`.
 - `src/lib/utils.ts` — the `cn()` helper (clsx + tailwind-merge) for class composition
 - `src/layouts/Base.astro` — `title` / `description` / `transparentNav` props, Google Fonts preconnect, scroll-reveal IntersectionObserver, `<html lang dir>` driven by `getLocale()` / `getTextDirection()`
@@ -17,13 +17,13 @@ Opinionated Astro 6 + Tailwind 4 starter, used as the base template for the `/si
 - `src/components/Footer.astro` — three-column footer skeleton
 - `src/pages/index.astro` — hero placeholder
 - `src/styles/global.css` — Tailwind v4 `@theme inline` project tokens (`--color-ink`, `--color-paper`, `--color-brand`, `--font-sans`, `--font-display`, …) and `.reveal` animation utilities
-- `project.inlang/settings.json` + `messages/en.json` — every template string lives here, called via `m.*()`
+- `project.inlang/settings.json` + `messages/nl.json` — every template string lives here, called via `m.*()`
 - TypeScript strict, Node ≥22.12
 
 ## Bootstrapping
 
 ```bash
-npm create astro@latest my-site -- --template dazzled-studio/astro-site-rebuild-template
+pnpm create astro@latest my-site -- --template auttendo-agency/starter-v1
 ```
 
 ## Version pins
@@ -120,7 +120,7 @@ Reference: https://bits-ui.com/docs
 
 ### Why src/paraglide/ is committed
 
-Paraglide's compiler fetches its message-format plugin from `cdn.jsdelivr.net` at build time. Agent sandboxes (TaskRunner / `/site-rebuild`) run with a restricted egress allowlist that doesn't include third-party CDNs, so `astro build` would fail there if `src/paraglide/` were absent.
+Paraglide's compiler fetches its message-format plugin from `cdn.jsdelivr.net` at build time. Sandboxed/CI builds with a restricted egress allowlist that doesn't include third-party CDNs would fail `astro build` if `src/paraglide/` were absent.
 
 We commit the compiled output instead. Treat it like any other build artifact that has to live in the repo:
 
@@ -131,11 +131,13 @@ We commit the compiled output instead. Treat it like any other build artifact th
 
 ### Rule: `baseLocale` matches the source site's language
 
-The template ships with `baseLocale: "en"` and `messages/en.json` as a placeholder only.
+The template ships Dutch-first: `baseLocale: "nl"` and `messages/nl.json`. Most builds are Dutch, so this is the common case out of the box.
 
-**If the source/target site is Dutch, change `baseLocale` to `"nl"`, RENAME `messages/en.json` → `messages/nl.json`, and DELETE the leftover `en.json`.** Same story for German (`de`), French (`fr`), Spanish (`es`), and any other language. A single-locale build must ship exactly one `messages/<locale>.json` matching the site's actual language. Do not leave a stray English file sitting next to the real one.
+**If the site is NOT Dutch, change `baseLocale` (e.g. to `"en"`), RENAME `messages/nl.json` → `messages/<locale>.json`, and translate the values.** Same story for German (`de`), French (`fr`), Spanish (`es`), and any other language. A single-locale build must ship exactly one `messages/<locale>.json` matching the site's actual language. Do not leave a stray file in the wrong language sitting next to the real one.
 
 Keys stay in English (they're code identifiers). Only the values get localized.
+
+**UI copy only.** Message files hold interface strings (nav, buttons, headings, labels, footer). Long-form content — blog posts, articles, case studies — goes in Astro content collections (one entry per locale), never in `messages/<locale>.json`. Keeping UI in the locale file is what makes adding a second language a config flip rather than a refactor.
 
 ### Adding copy when building a new page
 
@@ -147,13 +149,14 @@ ICU interpolation is supported (`"footer_copyright": "© {year} {brand}."` → `
 
 ### Going multilingual
 
-1. Edit `project.inlang/settings.json` — add every locale to `locales`, with `baseLocale` set to the **source site's primary language** (not English by default):
+Don't enable Astro's native `i18n` routing block: Paraglide's `urlPatterns` owns routing here, and running both fights over the same paths.
+
+1. Edit `project.inlang/settings.json` — add every locale to `locales`, with `baseLocale` set to the language served at `/` with no prefix:
    ```json
    { "baseLocale": "nl", "locales": ["nl", "en", "de"], "modules": [...] }
    ```
 2. Create one `messages/<locale>.json` per locale, all mirroring the same keys.
-3. Uncomment the `i18n` block in `astro.config.mjs` and list your locales there too (`prefixDefaultLocale: false` keeps the base locale at `/`).
-4. Switch the Paraglide `strategy` from `['baseLocale']` to `['url', 'baseLocale']` and add `urlPatterns`:
+3. Switch the Paraglide `strategy` from `['baseLocale']` to `['url', 'baseLocale']` and add `urlPatterns`. List the prefixed (non-base) locales first and the unprefixed `baseLocale` catch-all LAST — patterns match in array order, first match wins, so a leading `/:path(.*)?` would swallow the prefixed ones:
    ```js
    paraglideVitePlugin({
      project: './project.inlang',
@@ -164,23 +167,35 @@ ICU interpolation is supported (`"footer_copyright": "© {year} {brand}."` → `
        localized: [
          ['en', '/en/:path(.*)?'],
          ['de', '/de/:path(.*)?'],
-         ['nl', '/:path(.*)?'],
+         ['nl', '/:path(.*)?'], // baseLocale: unprefixed, MUST be last
        ],
      }],
    })
    ```
-5. Add `src/middleware.ts` so the locale is set per request:
+4. Move pages under `src/pages/[...locale]/` and fan them out with `getStaticPaths`. The base locale must produce an `undefined` param so it renders at `/`, not `/nl/`:
+   ```js
+   import { locales, baseLocale } from '../paraglide/runtime.js';
+
+   export function getStaticPaths() {
+     return locales.map((locale) => ({
+       params: { locale: locale === baseLocale ? undefined : locale },
+     }));
+   }
+   ```
+5. Rename `src/middleware.ts.example` → `src/middleware.ts`. The callback MUST be `() => next()`, NOT `({ request }) => next(request)`. With a `[...locale]` catch-all + static output, passing the request de-localizes `/en/` down to `/` before Astro routes it, so the prefixed locale collapses onto the base route and the build emits a 404 at `dist/en/index.html`. (Real bug we hit — `() => next()` is the fix.)
    ```ts
    import { defineMiddleware } from 'astro:middleware';
    import { paraglideMiddleware } from './paraglide/server.js';
 
    export const onRequest = defineMiddleware((context, next) =>
-     paraglideMiddleware(context.request, ({ request }) => next(request))
+     paraglideMiddleware(context.request, () => next()),
    );
    ```
-6. For pure SSG, fan pages out over `locales` via `getStaticPaths()`, or use Astro's built-in i18n routing.
+   No SSR/edge adapter is required for this: middleware runs at build time during prerendering and only sets the locale. The Vercel adapter is already standard in the config; you'd only need `edgeMiddleware: true` if you wanted a server-side redirect at request time.
+6. First-visit redirect (optional): `Base.astro` exposes a `redirectLocale` prop — set it on the base-locale homepage to bounce non-Dutch browsers to `/en/` once, client-side (no adapter needed). Inert on single-locale builds.
 7. Use `localizeHref()` from `./paraglide/runtime.js` whenever building `<a>` tags so links automatically point at the current locale's URL.
-8. Translate every key in every `messages/<locale>.json`. Pull translations directly from the corresponding pages on the source site — do not machine-translate when the original copy exists.
+8. Emit `hreflang` + canonical alternates in `Base.astro` for SEO (one `<link rel="alternate" hreflang>` per locale plus `x-default`).
+9. Translate every key in every `messages/<locale>.json`. Pull translations directly from the corresponding pages on the source site — do not machine-translate when the original copy exists.
 
 References:
 - Paraglide Astro example — https://github.com/opral/paraglide-js/tree/main/examples/astro

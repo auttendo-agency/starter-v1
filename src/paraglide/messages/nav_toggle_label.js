@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Nav_Toggle_LabelInputs */
 
-const en_nav_toggle_label = /** @type {(inputs: Nav_Toggle_LabelInputs) => LocalizedString} */ () => {
+const nl_nav_toggle_label = /** @type {(inputs: Nav_Toggle_LabelInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Menu`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Menu" |
-*
+
 * @param {Nav_Toggle_LabelInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const nav_toggle_label = /** @type {((inputs?: Nav_Toggle_LabelInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Nav_Toggle_LabelInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const nav_toggle_label = /** @type {((inputs?: Nav_Toggle_LabelInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Nav_Toggle_LabelInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_nav_toggle_label(inputs)
+	return nl_nav_toggle_label(inputs)
 });

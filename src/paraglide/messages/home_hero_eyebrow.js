@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Home_Hero_EyebrowInputs */
 
-const en_home_hero_eyebrow = /** @type {(inputs: Home_Hero_EyebrowInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Eyebrow`)
+const nl_home_hero_eyebrow = /** @type {(inputs: Home_Hero_EyebrowInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bovenkop`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Eyebrow" |
-*
+
 * @param {Home_Hero_EyebrowInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const home_hero_eyebrow = /** @type {((inputs?: Home_Hero_EyebrowInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Home_Hero_EyebrowInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const home_hero_eyebrow = /** @type {((inputs?: Home_Hero_EyebrowInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Home_Hero_EyebrowInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_home_hero_eyebrow(inputs)
+	return nl_home_hero_eyebrow(inputs)
 });

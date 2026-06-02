@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Footer_Email_HrefInputs */
 
-const en_footer_email_href = /** @type {(inputs: Footer_Email_HrefInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`mailto:hello@example.com`)
+const nl_footer_email_href = /** @type {(inputs: Footer_Email_HrefInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`mailto:hallo@voorbeeld.nl`)
 };
 
 /**
-* | output |
-* | --- |
-* | "mailto:hello@example.com" |
-*
+
 * @param {Footer_Email_HrefInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const footer_email_href = /** @type {((inputs?: Footer_Email_HrefInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Email_HrefInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const footer_email_href = /** @type {((inputs?: Footer_Email_HrefInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Footer_Email_HrefInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_footer_email_href(inputs)
+	return nl_footer_email_href(inputs)
 });

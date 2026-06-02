@@ -1,0 +1,25 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "site_title": "Sitetitel",
+  "site_description": "Sitebeschrijving.",
+
+  "nav_brand": "Merk",
+  "nav_toggle_label": "Menu",
+
+  "footer_brand": "Merk",
+  "footer_tagline": "Korte tagline of omschrijving. Vervang per project.",
+  "footer_contact_heading": "Contact",
+  "footer_address_line1": "Straat 1",
+  "footer_address_line2": "0000 AA Plaats",
+  "footer_phone_label": "+31 00 000 0000",
+  "footer_phone_href": "tel:+3100000000",
+  "footer_links_heading": "Links",
+  "footer_email_label": "hallo@voorbeeld.nl",
+  "footer_email_href": "mailto:hallo@voorbeeld.nl",
+  "footer_copyright": "© {year} {brand}.",
+
+  "home_hero_eyebrow": "Bovenkop",
+  "home_hero_headline": "Kop komt hier.",
+  "home_hero_body": "Ondersteunende paragraaf. Vervang deze hero per project.",
+  "home_section_placeholder": "Vervang deze inhoud door de secties van de herbouwde homepage."
+}

@@ -5,20 +5,17 @@ import { getLocale, experimentalStaticLocale } from '../runtime.js';
 
 /** @typedef {{}} Home_Hero_BodyInputs */
 
-const en_home_hero_body = /** @type {(inputs: Home_Hero_BodyInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Supporting paragraph. Replace this hero per project.`)
+const nl_home_hero_body = /** @type {(inputs: Home_Hero_BodyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ondersteunende paragraaf. Vervang deze hero per project.`)
 };
 
 /**
-* | output |
-* | --- |
-* | "Supporting paragraph. Replace this hero per project." |
-*
+
 * @param {Home_Hero_BodyInputs} inputs
-* @param {{ locale?: "en" }} options
+* @param {{ locale?: "nl" }} options
 * @returns {LocalizedString}
 */
-export const home_hero_body = /** @type {((inputs?: Home_Hero_BodyInputs, options?: { locale?: "en" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Home_Hero_BodyInputs, { locale?: "en" }, {}>} */ ((inputs = {}, options = {}) => {
+export const home_hero_body = /** @type {((inputs?: Home_Hero_BodyInputs, options?: { locale?: "nl" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Home_Hero_BodyInputs, { locale?: "nl" }, {}>} */ ((inputs = {}, options = {}) => {
 	experimentalStaticLocale ?? options.locale ?? getLocale()
-	return en_home_hero_body(inputs)
+	return nl_home_hero_body(inputs)
 });
