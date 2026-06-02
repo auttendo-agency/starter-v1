@@ -6,7 +6,7 @@ Opinionated Astro 6 + Tailwind 4 starter. Everything common to a new build is he
 
 - Astro 6 + Tailwind 4 via `@tailwindcss/vite` (no separate `astro add tailwind` step needed)
 - Paraglide JS wired up for i18n — single-locale Dutch (`nl`) by default, multilingual with a config flip (see below)
-- `src/layouts/Base.astro` — title/description/transparentNav props, Google Fonts preconnect, scroll-reveal IntersectionObserver, `lang` + `dir` from Paraglide runtime
+- `src/layouts/Base.astro` — title/description/transparentNav props, Google Fonts preconnect, scroll-reveal IntersectionObserver, `lang` + `dir` from Paraglide runtime, Auttendo badge script (replace `data-site` before launch)
 - `src/components/Nav.astro` — responsive nav with mobile menu and scroll-aware transparent variant
 - `src/components/Footer.astro` — three-column footer skeleton
 - `src/pages/index.astro` — hero placeholder
@@ -34,6 +34,7 @@ Astro, Tailwind, and Vite are pinned (not caretted) and an `overrides` block for
 - All images live under `public/images/` and are referenced as `/images/foo.jpg`
 - No icon library, no JS framework — keep it static, Astro components only
 - All user-facing copy goes in `messages/<locale>.json` and is read via `import { m } from '../paraglide/messages.js'` — never hardcode strings in components/pages, even on single-language sites
+- The Auttendo badge in `Base.astro` ships with `data-site="REPLACE_ME"` — set it to this site's slug before launch. The `integrity` (SRI) hash is pinned to the current `v1.js`; if that script is rotated, the hash must be updated here and on every live site.
 
 ## i18n (Paraglide JS)
 
