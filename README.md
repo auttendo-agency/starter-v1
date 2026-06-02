@@ -26,6 +26,81 @@ Astro's `--template` flag accepts any `<github-user>/<github-repo>` and clones t
 
 Astro, Tailwind, and Vite are pinned (not caretted) and an `overrides` block forces `vite@7.3.3`. Reason: newer transitive `vite@8` / `rolldown` versions hoisted via `@tailwindcss/vite` currently fail with `Missing field tsconfigPaths on BindingViteResolvePluginConfig.resolveOptions`. Bump deliberately, after verifying a build.
 
+## Forms
+
+Forms post to the Auttendo forms endpoint, which stores the (encrypted) submission and emails the site owner. No backend, no API key in the page: it is a plain HTML `<form>`. The endpoint accepts `multipart/form-data` only (no JSON body), and it reflects CORS headers on both success and error responses, so a `fetch()` from the site can read the result and show errors gracefully.
+
+**Only add a form when the site genuinely needs one** (a contact, reservation, or newsletter form). A "contact" page that only shows an email address and phone number does not need a form.
+
+**The pattern is progressive enhancement.** The markup is a normal `<form>` with a `_redirect`, so with JavaScript disabled it does a native POST and the browser is sent back to `/PAGE_PATH?sent=1`. The script below upgrades that to an AJAX submit: it strips `_redirect` (so the endpoint returns JSON instead of a 302), then shows an inline success or a specific error without a full page reload.
+
+```html
+<form action="https://dash.auttendo.com/api/forms/SLUG" method="POST">
+  <input type="hidden" name="_token" value="FORM_TOKEN">
+  <input type="hidden" name="_form" value="FORM_NAME">
+  <input type="hidden" name="_redirect" value="/PAGE_PATH?sent=1">
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+
+  <!-- your fields here -->
+
+  <button type="submit">Verstuur</button>
+  <p data-form-status hidden role="status" aria-live="polite"></p>
+</form>
+```
+
+Drop this `<script>` once per page that has a form (or lift it into `Base.astro` if the site has several). It binds every Auttendo form on the page:
+
+```html
+<script>
+  for (const form of document.querySelectorAll('form[action*="/api/forms/"]')) {
+    const status = form.querySelector('[data-form-status]');
+    const show = (msg) => { if (status) { status.hidden = false; status.textContent = msg; } };
+    form.addEventListener('submit', async (e) => {
+      if (!form.checkValidity()) return; // let native validation handle it
+      e.preventDefault();
+      const btn = form.querySelector('button[type=submit]');
+      if (btn) btn.disabled = true;
+      const data = new FormData(form);
+      data.delete('_redirect'); // ask for a JSON result instead of a 302
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data });
+        if (res.ok) { form.reset(); form.hidden = true; show('Bedankt, we nemen snel contact op!'); return; }
+        if (res.status === 429) show('Te veel verzoeken. Wacht even en probeer het opnieuw.');
+        else if (res.status === 422) show('Controleer je gegevens en probeer het opnieuw.');
+        else show('Er ging iets mis. Probeer het later opnieuw.');
+      } catch {
+        show('Kan nu geen verbinding maken. Probeer het later opnieuw.');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+  // No-JS fallback path: the native _redirect lands here with ?sent=1.
+  if (new URLSearchParams(location.search).get('sent') === '1') {
+    const f = document.querySelector('form[action*="/api/forms/"]');
+    if (f) { f.hidden = true; const s = f.querySelector('[data-form-status]'); if (s) { s.hidden = false; s.textContent = 'Bedankt, we nemen snel contact op!'; } }
+  }
+</script>
+```
+
+The four hidden inputs are the contract:
+
+- **`SLUG`** : this site's Auttendo slug (same value as the badge `data-site`).
+- **`_token`** : a per-site HMAC issued by the platform. You cannot compute it locally; it is provisioned during onboarding. Leave the literal value in place.
+- **`_form`** : a short lowercase identifier for *this* form (`contact`, `reservation`, `newsletter`, `callback`). Letters, digits, `_`, `-`, max 32 chars. Labels the submission in the owner's notification email.
+- **`_redirect`** : a relative path (must start with `/`) used by the no-JS fallback. The script deletes it before the AJAX POST so the endpoint returns `{ "ok": true }` JSON instead of a 302.
+- **`_gotcha`** : spam honeypot. Leave it exactly as written (offscreen, `aria-hidden`). Bots fill it; those submissions are silently dropped (and report success).
+
+The endpoint returns JSON `{ "ok": true }` on success and `{ "ok": false, "error": "..." }` with the matching status on failure (`422` validation, `429` rate-limited, `403` blocked origin/bad token). All carry CORS headers, so the `fetch()` above can read them.
+
+Field rules:
+
+- Use descriptive lowercase `name` attributes: `full_name`, `email`, `phone`, `message`, `preferred_date`. For checkbox/multi-select groups use the `name[]` suffix (`services[]`).
+- **Always include a field named `email`** when collecting one : the endpoint uses it as the Reply-To so the owner can just hit reply.
+- Max 50 fields, 10 KB per value. The endpoint is rate-limited per site and per IP.
+- No `type="file"` / `enctype="multipart/form-data"`, and no multi-step forms (use one form with visual sections). File upload is not supported.
+- The `action` must be the absolute `https://dash.auttendo.com/...` URL : a relative path 404s. CORS is locked to the site's own production and preview domains, so the form only works from the deployed site.
+
 ## Conventions
 
 - Brand color in `--color-brand` (and `--color-brand-dark` / `--color-brand-light`)
