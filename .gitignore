@@ -18,13 +18,17 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
+# environment variables — ignore every .env variant, allow only the committed template
 .env
-.env.production
+.env.*
+!.env.example
+
+# typescript incremental build cache
+*.tsbuildinfo
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
-.vercel
+.vercel/
