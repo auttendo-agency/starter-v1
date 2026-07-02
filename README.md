@@ -109,7 +109,7 @@ Field rules:
 - All images live under `public/images/` and are referenced as `/images/foo.jpg`
 - No icon library, no JS framework — keep it static, Astro components only
 - All user-facing copy goes in `messages/<locale>.json` and is read via `import { m } from '../paraglide/messages.js'` — never hardcode strings in components/pages, even on single-language sites
-- The Auttendo badge in `Base.astro` ships with `data-site="REPLACE_ME"` — set it to this site's slug before launch. The `integrity` (SRI) hash is pinned to the current `v1.js`; if that script is rotated, the hash must be updated here and on every live site.
+- The Auttendo badge in `Base.astro` ships with `data-site="REPLACE_ME"`; set it to this site's slug before launch. The loader is not SRI-pinned (no `integrity` attribute), so there is no hash to maintain when `v1.js` is rotated.
 
 ## i18n (Paraglide JS)
 
