@@ -18,7 +18,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables — ignore every .env variant, allow only the committed template
+# environment variables — ignore every .env variant, allow only the committed template.
+# If this project is later provisioned with dotenvx (see CLAUDE.md "Secrets"), the
+# ENCRYPTED .env.local/.env.production get un-ignored with `!` exceptions below — and
+# .env.keys stays ignored. Until then, nothing here is committed.
 .env
 .env.*
 !.env.example
