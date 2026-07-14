@@ -30,6 +30,12 @@ pnpm create astro@latest my-site -- --template auttendo-agency/starter-v1
 
 Astro, Tailwind, Svelte, `@astrojs/svelte`, `bits-ui`, `clsx`, `tailwind-merge`, and Vite are pinned (not caretted), and an `overrides` block forces `vite@7.3.3`. Reason: newer transitive `vite@8` / `rolldown` versions hoisted via `@tailwindcss/vite` currently fail with `Missing field tsconfigPaths on BindingViteResolvePluginConfig.resolveOptions`. Bump deliberately, after verifying a build.
 
+## Secrets
+
+This project has **no secrets** — static build, no `.env` needed. A committed pre-commit gate (`.githooks/pre-commit`, wired via the `prepare` script) already guards against ever committing a plaintext `.env`; it no-ops until a project actually uses dotenvx.
+
+**If a task would introduce the first secret, STOP.** Don't create a `.env` / `.env.keys` or wire up env handling yourself — secrets across Auttendo projects are operated by **Dotenvx Armor**. Tell the user, and have them contact **Chris (chris@auttendo.com)** to provision it; the full dotenvx + armor workflow gets added here only then.
+
 ## Conventions
 
 - Brand color in `--color-brand` (and `--color-brand-dark` / `--color-brand-light`).

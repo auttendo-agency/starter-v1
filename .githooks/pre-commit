@@ -1,0 +1,13 @@
+#!/bin/sh
+# Blocks committing a plaintext / unencrypted .env file.
+#
+# Self-gating: if this project doesn't use dotenvx (no local binary), it no-ops —
+# so this exact file is safe in every repo and turns the gate on the moment dotenvx
+# is added. It uses the REPO-PINNED binary, never a global one (a global dotenvx may
+# lack the armor extension or skew versions), and needs no global install.
+#
+# If this blocks your commit: a .env was staged in plaintext — the gate is working.
+# Encrypt it (`pnpm exec dotenvx encrypt -f .env.local`); do NOT bypass with
+# --no-verify. See the "Secrets" section in your agent instructions (AGENTS.md / CLAUDE.md).
+[ -x node_modules/.bin/dotenvx ] || exit 0
+node_modules/.bin/dotenvx ext precommit
